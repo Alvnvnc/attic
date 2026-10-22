@@ -149,18 +149,41 @@ export function buildMcpServer(): McpServer {
     },
     async ({ horizon_days }) => {
       const b = store.homeBrief();
-      const parts: string[] = [];
-      if (b.expiring_warranties.length) {
-        const w = b.expiring_warranties[0];
-        parts.push(`${w.name} warranty ends ${w.expires_at}`);
+      const lines: string[] = [];
+      if (b.open_issues.length) {
+        lines.push(
+          `${b.open_issues.length} open issue${b.open_issues.length === 1 ? "" : "s"}: ` +
+            b.open_issues.map((i) => `${i.title} (since ${i.opened_at})`).join("; "),
+        );
       }
       if (b.due_reminders.length) {
-        const r = b.due_reminders[0];
-        parts.push(`${r.title}${r.due_at ? ` is due ${r.due_at}` : ""}`);
+        lines.push(
+          `Due soon: ` +
+            b.due_reminders
+              .slice(0, 3)
+              .map((r) => `${r.title}${r.due_at ? ` on ${r.due_at}` : ""}`)
+              .join("; "),
+        );
       }
-      if (b.open_issues.length) parts.push(`${b.open_issues.length} open issue(s), starting with "${b.open_issues[0].title}"`);
-      if (b.overdue_service.length) parts.push(`${b.overdue_service[0].appliance} has not been serviced recently`);
-      return both(parts.length ? `House brief: ${parts.join("; ")}.` : "Nothing pressing in the house right now.", {
+      if (b.expiring_warranties.length) {
+        lines.push(
+          `Warranties ending: ` +
+            b.expiring_warranties
+              .slice(0, 3)
+              .map((w) => `${w.name} on ${w.expires_at} (${w.days_left} days)`)
+              .join("; "),
+        );
+      }
+      if (b.overdue_service.length) {
+        lines.push(
+          `Overdue for service: ` +
+            b.overdue_service
+              .slice(0, 3)
+              .map((o) => `${o.appliance}${o.last_service ? ` (last ${o.last_service})` : " (never logged)"}`)
+              .join("; "),
+        );
+      }
+      return both(lines.length ? `House brief. ${lines.join(". ")}.` : "Nothing pressing in the house right now.", {
         horizon_days: horizon_days ?? 45,
         ...b,
       });

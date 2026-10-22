@@ -3,6 +3,7 @@
 	# 127.0.0.1:8787. Port 80 belongs to another site on this box, so ACME uses
 	# TLS-ALPN-01 only.
 	admin off
+	auto_https disable_redirects
 	storage file_system /data
 	email admin@alvnvnc.site
 }

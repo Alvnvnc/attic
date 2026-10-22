@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Attic — demo scenes</title>
+    <style>
+      @font-face {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 300 700;
+        src: url("../web/fonts/inter-normal-300-700-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Instrument Serif";
+        font-style: normal;
+        font-weight: 400;
+        src: url("../web/fonts/instrument-serif-normal-400-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Instrument Serif";
+        font-style: italic;
+        font-weight: 400;
+        src: url("../web/fonts/instrument-serif-italic-400-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 400 500;
+        src: url("../web/fonts/jetbrains-mono-normal-400-latin.woff2") format("woff2");
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body {
+        background:
+          radial-gradient(900px 620px at 18% -16%, rgba(90, 209, 232, 0.1), transparent 62%),
+          radial-gradient(760px 520px at 92% 112%, rgba(234, 176, 128, 0.06), transparent 60%),
+          #07080a;
+        color: #f3f5f8;
+        font-family: "Inter", system-ui, sans-serif;
+        overflow: hidden;
+      }
+      .scene {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        padding: 64px 84px;
+        display: none;
+      }
+      .scene.is-on { display: block; }
+      .eyebrow {
+        margin: 0 0 10px;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #767f8c;
+      }
+      .serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -0.01em; }
+      .mono { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.02em; }
+      .rule { height: 1px; background: rgba(255, 255, 255, 0.08); }
+
+      /* ---------------------------------------------------------------- s1 */
+      #s1 { display: grid; place-items: center; text-align: center; }
+      #s1 .glow {
+        position: absolute;
+        width: 620px;
+        height: 620px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(90, 209, 232, 0.16), transparent 62%);
+        filter: blur(20px);
+        animation: breathe 7s ease-in-out infinite;
+      }
+      @keyframes breathe {
+        0%, 100% { transform: scale(0.92); opacity: 0.7; }
+        50% { transform: scale(1.06); opacity: 1; }
+      }
+      #s1 .inner { position: relative; }
+      #s1 .roof { width: 54px; height: 26px; margin: 0 auto 26px; color: #5ad1e8; }
+      #s1 h1 {
+        font-family: "Instrument Serif", serif;
+        font-size: 176px;
+        line-height: 0.94;
+        margin: 0;
+        letter-spacing: -0.03em;
+        animation: rise 1100ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+      #s1 .tag {
+        margin: 22px 0 0;
+        font-size: 25px;
+        color: #b7bfca;
+        letter-spacing: -0.01em;
+        animation: rise 1100ms cubic-bezier(0.2, 0.8, 0.2, 1) 260ms both;
+      }
+      #s1 .meta {
+        margin: 46px auto 0;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        color: #767f8c;
+        animation: rise 1100ms cubic-bezier(0.2, 0.8, 0.2, 1) 520ms both;
+      }
+      #s1 .meta span {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 999px;
+        padding: 7px 13px;
+      }
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: none; }
+      }
+
+      /* ---------------------------------------------------------------- s2 */
+      #s2 { padding-top: 84px; }
+      #s2 .grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 70px; margin-top: 26px; }
+      #s2 h2 {
+        font-family: "Instrument Serif", serif;
+        font-weight: 400;
+        font-size: 62px;
+        line-height: 1.12;
+        margin: 0 0 34px;
+        letter-spacing: -0.02em;
+      }
+      #s2 h2 em { font-style: italic; color: #5ad1e8; }
+      #s2 ul { list-style: none; margin: 0; padding: 0; }
+      #s2 li {
+        font-family: "Instrument Serif", serif;
+        font-size: 33px;
+        line-height: 1.3;
+        padding: 13px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        color: #e8ecf2;
+        opacity: 0;
+        animation: slide 700ms ease both;
+      }
+      #s2 li span { color: #767f8c; font-size: 15px; font-family: "Inter", sans-serif; margin-left: 14px; }
+      #s2 li:nth-child(1) { animation-delay: 300ms; }
+      #s2 li:nth-child(2) { animation-delay: 700ms; }
+      #s2 li:nth-child(3) { animation-delay: 1100ms; }
+      #s2 li:nth-child(4) { animation-delay: 1500ms; }
+      @keyframes slide {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: none; }
+      }
+      #s2 .side { padding-top: 12px; }
+      #s2 .side .card {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 20px 22px;
+        background: rgba(255, 255, 255, 0.02);
+      }
+      #s2 .side .card + .card { margin-top: 14px; }
+      #s2 .side .k { color: #767f8c; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; }
+      #s2 .side .v { margin-top: 6px; font-size: 15px; color: #e8ecf2; line-height: 1.5; }
+      #s2 .bottom {
+        position: absolute;
+        left: 84px;
+        right: 84px;
+        bottom: 76px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 30px;
+      }
+      #s2 .bottom .lead {
+        font-family: "Instrument Serif", serif;
+        font-size: 40px;
+        margin: 0;
+        animation: rise 900ms ease 2100ms both;
+      }
+      #s2 .bottom .lead em { color: #5ad1e8; font-style: italic; }
+
+      /* ---------------------------------------------------------------- s4 */
+      #s4 h2 {
+        font-family: "Instrument Serif", serif;
+        font-weight: 400;
+        font-size: 54px;
+        margin: 6px 0 30px;
+        letter-spacing: -0.02em;
+      }
+      #s4 .diagram { display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr; align-items: center; gap: 0; }
+      #s4 .box {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 22px 24px;
+        background: rgba(255, 255, 255, 0.02);
+        min-height: 148px;
+      }
+      #s4 .box .k { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #767f8c; }
+      #s4 .box .v { margin-top: 8px; font-size: 20px; letter-spacing: -0.01em; }
+      #s4 .box .m { margin-top: 8px; color: #767f8c; font-size: 12px; line-height: 1.5; }
+      #s4 .box.accent { border-color: rgba(90, 209, 232, 0.35); box-shadow: 0 0 0 4px rgba(90, 209, 232, 0.06); }
+      #s4 .link { position: relative; height: 1px; background: rgba(255, 255, 255, 0.18); }
+      #s4 .link::after {
+        content: "";
+        position: absolute;
+        right: -1px;
+        top: -3px;
+        width: 7px;
+        height: 7px;
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+        border-right: 1px solid rgba(255, 255, 255, 0.4);
+        transform: rotate(45deg);
+      }
+      #s4 .link span {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: -26px;
+        white-space: nowrap;
+        color: #767f8c;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+      }
+      #s4 .tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+      #s4 .tools span {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: #cfeeff;
+        border: 1px solid rgba(90, 209, 232, 0.28);
+        background: rgba(90, 209, 232, 0.07);
+        border-radius: 999px;
+        padding: 6px 12px;
+      }
+      #s4 .foot {
+        position: absolute;
+        left: 84px;
+        right: 84px;
+        bottom: 58px;
+        display: flex;
+        justify-content: space-between;
+        color: #767f8c;
+      }
+
+      /* ---------------------------------------------------------------- s5 */
+      #s5 { display: grid; place-items: center; text-align: center; }
+      #s5 h2 {
+        font-family: "Instrument Serif", serif;
+        font-size: 112px;
+        margin: 0;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      #s5 .tag { margin: 16px 0 0; font-size: 22px; color: #b7bfca; }
+      #s5 .links { margin-top: 44px; display: flex; gap: 12px; justify-content: center; }
+      #s5 .links span {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 11px 16px;
+        color: #e8ecf2;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+      }
+      #s5 .fine { margin-top: 34px; color: #767f8c; font-size: 11.5px; letter-spacing: 0.04em; }
+    </style>
+  </head>
+  <body>
+    <section class="scene" id="s1">
+      <div class="glow"></div>
+      <div class="inner">
+        <svg class="roof" viewBox="0 0 32 16" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M2 14 16 2l14 12" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <h1>Attic</h1>
+        <p class="tag">The memory of your house.</p>
+        <div class="meta mono">
+          <span>Alexa+ skill</span>
+          <span>MCP 2025-11-25</span>
+          <span>Streamable HTTP</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="s2">
+      <p class="eyebrow">The problem</p>
+      <div class="grid">
+        <div>
+          <h2>Your house knows a lot.<br /><em>Nothing can ask it.</em></h2>
+          <ul>
+            <li>Which plumber fixed the water heater <span>March 14 · $85</span></li>
+            <li>When the fridge warranty runs out <span>54 days</span></li>
+            <li>Where the spare key actually is <span>unit 4B</span></li>
+            <li>That the leak was quoted, then forgotten <span>open since Sept 21</span></li>
+          </ul>
+        </div>
+        <div class="side">
+          <div class="card">
+            <div class="k">Where it lives today</div>
+            <div class="v">Chat threads. A drawer of receipts. Your head, at the worst possible moment.</div>
+          </div>
+          <div class="card">
+            <div class="k">Where it lives with Attic</div>
+            <div class="v">One MCP endpoint. Spoken answers grounded in the record. Writes that persist.</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom">
+        <p class="lead">So the house got <em>a memory</em> — and Alexa+ got a way to reach it.</p>
+        <span class="mono" style="color: #767f8c">attic · mcp 2025-11-25</span>
+      </div>
+    </section>
+
+    <section class="scene" id="s4">
+      <p class="eyebrow">Architecture</p>
+      <h2>One endpoint. Your house keeps its data.</h2>
+      <div class="diagram">
+        <div class="box">
+          <div class="k">Client</div>
+          <div class="v">Alexa+ / simulated app</div>
+          <div class="m">Holds no house state. Lists tools, calls them, speaks the result.</div>
+        </div>
+        <div class="link"><span>HTTPS · JSON-RPC · SSE</span></div>
+        <div class="box accent">
+          <div class="k">Attic</div>
+          <div class="v">MCP server · Node 22</div>
+          <div class="m">Streamable HTTP transport, sessions, bearer auth, nine tools.</div>
+        </div>
+        <div class="link"><span>SQL · FTS5</span></div>
+        <div class="box">
+          <div class="k">Storage</div>
+          <div class="v">SQLite</div>
+          <div class="m">Memories, appliances, service ledger, issues, reminders — one file.</div>
+        </div>
+      </div>
+      <div class="tools">
+        <span>recall</span><span>remember</span><span>log_service</span><span>home_brief</span>
+        <span>open_issue</span><span>resolve_issue</span><span>remind</span><span>complete_reminder</span><span>forget</span>
+      </div>
+      <div class="foot mono">
+        <span>protocol 2025-11-25 · streamable-http</span>
+        <span>self-hosted · MIT · one small VPS</span>
+      </div>
+    </section>
+
+    <section class="scene" id="s5">
+      <div>
+        <h2>Attic</h2>
+        <p class="tag">The memory of your house.</p>
+        <div class="links">
+          <span>github.com/Alvnvnc/attic</span>
+          <span>attic.54-254-226-82.sslip.io</span>
+        </div>
+        <p class="fine">MIT · Amazon Developer Hackathon 2026 · Alexa+ track</p>
+      </div>
+    </section>
+
+    <script>
+      const scene = new URLSearchParams(location.search).get("s") || "1";
+      const el = document.getElementById("s" + scene);
+      if (el) el.classList.add("is-on");
+    </script>
+  </body>
+</html>
