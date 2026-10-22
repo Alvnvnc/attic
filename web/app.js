@@ -137,6 +137,13 @@ function connectWire() {
 
 /* ------------------------------------------------------------------- asking */
 
+function layoutTranscript() {
+  // Newest turn stays just above the composer; older turns scroll away.
+  const count = transcript.querySelectorAll(".turn").length;
+  transcript.classList.toggle("is-bottom", count > 0);
+  transcript.classList.remove("is-centered");
+}
+
 function startTurn(text) {
   if (emptyState && !emptyState.hidden) emptyState.hidden = true;
   const turn = el("article", "turn");
@@ -154,6 +161,7 @@ function startTurn(text) {
 
   turn.append(q, toolrow, thinking, answer, meta);
   transcript.append(turn);
+  layoutTranscript();
   scrollTranscript();
   return { turn, toolrow, answer, meta, thinking };
 }
@@ -199,6 +207,7 @@ async function ask(text) {
 
     setPresence("speaking", "Speaking", "Grounded in household memory.");
     await typeOut(answer, data.answer ?? "I could not reach the house memory.");
+    layoutTranscript();
     setPresence("idle", "Ready when you are", "Every answer is a real MCP tool call over Streamable HTTP.");
     scrollTranscript();
     loadState();

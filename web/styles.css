@@ -414,8 +414,16 @@ h1 {
   color: var(--ink);
 }
 
-.turn:first-of-type {
+.transcript.is-bottom .turn:first-of-type {
   margin-top: auto;
+}
+
+.transcript.is-centered {
+  justify-content: center;
+}
+
+.transcript.is-centered .turn:last-child {
+  border-bottom: 0;
 }
 
 .turn {
