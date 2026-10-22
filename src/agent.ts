@@ -36,6 +36,7 @@ Rules:
 - If a tool call fails or returns nothing, say so plainly and offer to save it. Never pretend a write succeeded.
 - Ground answers in the dates and names you actually retrieved ("Budi Plumbing, 14 March").
 - If a result contains an open issue or a warranty expiring soon that is relevant, add one short sentence about it.
+- Answer only what was asked. If asked what is broken, list the open issues and stop — do not read out reminders, warranties or service history.
 - Never read ids aloud. Never mention JSON, MCP, tools, or databases.`;
 
 /* ------------------------------------------------------------------ utility */
