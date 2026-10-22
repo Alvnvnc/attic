@@ -88,5 +88,5 @@ Severity: **S1** blocks the task, **S2** costs significant time, **S3** annoying
 **Expected:** a recorded voice conversation.
 **Actual:** had to record typed transcripts and say so, rather than fake a wake-word moment.
 **Severity:** S3.
-**Workaround:** the demo uses the transcript surface (typed), and the video states that the transcript is what a voice turn produces.
+**Workaround:** the demo types into the transcript surface, and both the video and the README label it a *simulated* Alexa+ experience rather than claiming a wake-word capture. Typing is visible on screen; nothing is dressed up as microphone input.
 **Suggestion:** an Alexa+ simulator that accepts an audio file or a text turn and returns the tool calls would let entrants record honest voice demos on any machine.

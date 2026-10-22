@@ -258,7 +258,48 @@ the single highest-value thing Amazon could ship for this track.
 
 ## 10. Friction log (bonus, up to 10%)
 
-Full version with severity and workarounds: `docs/friction-log.md`. Paste the entries as bullets.
+Paste-ready version of `docs/friction-log.md` (severity S1 = blocks, S2 = costs time, S3 = annoying):
+
+```
+1. First tools/call with curl returns 406 Not Acceptable (S2). initialize works, then tools/list with only
+   Content-Type: application/json fails: "406: Client must accept both application/json and
+   text/event-stream". Workaround: send Accept: application/json, text/event-stream on every request.
+   Fix: put the full header set in the first curl example of the "build a server" page.
+
+2. curl | jq breaks on a valid response (S2). A single tools/call comes back as SSE: "event: message" +
+   'data: {...}', so jq fails to parse. Workaround: sed -n 's/^data: //p' | jq. Fix: document the one-line
+   "unwrap SSE" snippet next to the curl example.
+
+3. Reusing one McpServer across sessions mixes state (S1). Connecting one server to a new
+   StreamableHTTPServerTransport per session fails with "Bad Request: Server already initialized" and
+   leaks state. Workaround: a fresh McpServer per transport, kept in a map filled by onsessioninitialized
+   and emptied by onclose. Fix: make the one-server-per-transport rule explicit, with that map pattern.
+
+4. No session expiry for abandoned sessions (S3). Clients that disconnect without DELETE /mcp leave
+   transports in memory until restart. Workaround: a reaper that drops transports idle for 30 minutes.
+   Fix: an idleTimeoutMs option, or a reaper example.
+
+5. SDK-to-protocol version mapping is implicit (S2). To prove the server negotiates 2025-11-25 (a track
+   requirement) I had to import LATEST_PROTOCOL_VERSION at runtime and grep the SDK. Fix: a compatibility
+   table (SDK version to supported protocol versions) on the docs landing page.
+
+6. Tool-calling quirks across three model providers (S2). Gemini's free tier rate-limits at 15 rpm and
+   kills a demo mid-recording; GLM's reasoning models spend the whole token budget on reasoning and return
+   empty content unless thinking is disabled; one model emitted a tool argument absent from the schema and
+   zod rejected the call. Workaround: default to a fast non-reasoning model, disable thinking explicitly,
+   keep schemas narrow, and treat a failed tool call as recoverable data.
+
+7. Certificate issuance on a VPS whose port 80 is already used (S2). HTTP-01 needs port 80, which another
+   site owns, and the DNS zone was not mine to edit. Workaround: a second Caddy bound only to 443 with
+   disable_http_challenge, forcing TLS-ALPN-01, on an sslip.io hostname. Fix: a short "MCP over TLS on a
+   single small VPS" recipe.
+
+8. Voice demo without a device (S3). Browser SpeechRecognition exists, but a headless screen recording
+   cannot speak into a microphone. Workaround: type into the transcript surface and label it a simulated
+   Alexa+ experience in both the video and the README; nothing is dressed up as microphone input. Fix: an
+   Alexa+ simulator that takes an audio file or a text turn and returns the tool calls.
+```
+
 
 ## 11. Testing instructions (for judges)
 
@@ -295,3 +336,17 @@ Local run: npm install && npm run build && cp .env.example .env (add any OpenAI-
 - [x] Open Source mini challenge fields (contribution URL, repo URL, username, description)
 - [ ] Join the hackathon and submit the project on Devpost (needs a logged-in, verified account)
 - [ ] Optional: attach the friction log to the two optional feedback questions
+
+---
+
+## Manual path — ten minutes in the Devpost UI
+
+1. <https://amazonappdev2026.devpost.com/> → **Join hackathon** (Cloudflare may ask for one click).
+2. **Submit project** (or My projects → Submit project).
+3. Step 1: name `Attic`, tagline from §2, thumbnail, then *Save and continue*.
+4. Step 2: paste the sections from §4 into the story boxes; add the **Built with** tags; add the video
+   link from §5 and the two links from §6 (*Try it out*).
+5. Step 3: primary track **Alexa+**; mini challenge **Open Source** with the four answers from §8; paste
+   the product feedback from §9 and the friction log from §10 into the custom questions.
+6. Submit, then reopen the project page and check the video plays and the repo link resolves.
+
