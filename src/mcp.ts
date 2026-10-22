@@ -139,7 +139,7 @@ export function buildMcpServer(): McpServer {
   server.registerTool(
     "home_brief",
     {
-      title: "Proactive home brief",
+      title: "Proactive house brief",
       description:
         "What needs attention in this home right now: reminders coming due, warranties about to expire, appliances that have not been serviced in a long time, and unresolved issues. Use proactively after a greeting, or when asked 'anything I should know about the house?'",
       inputSchema: {
@@ -192,10 +192,10 @@ export function buildMcpServer(): McpServer {
 
   /* ------------------------------------------------------------ open_issue */
   server.registerTool(
-    "open_issue",
+    "report_problem",
     {
-      title: "Open an issue",
-      description: "Track a household problem that is not fixed yet, so it can be chased later instead of forgotten.",
+      title: "Report a new problem",
+      description: "Report a NEW household problem that the person has just described and that is not fixed yet (something rattling, leaking, broken). Never use this to answer a question about problems that already exist — use home_brief for that.",
       inputSchema: {
         title: z.string().describe("Short description, e.g. 'dishwasher leaks under the door'."),
         appliance: z.string().optional().describe("Appliance involved."),
@@ -211,10 +211,10 @@ export function buildMcpServer(): McpServer {
 
   /* --------------------------------------------------------- resolve_issue */
   server.registerTool(
-    "resolve_issue",
+    "mark_fixed",
     {
-      title: "Resolve an issue",
-      description: "Close a tracked household issue once it is fixed, recording how it was resolved.",
+      title: "Mark a problem fixed",
+      description: "Close a tracked household problem once it is actually fixed, recording how it was resolved. Use together with log_service when a repair happened.",
       inputSchema: {
         issue: z.string().describe("Issue id, or words from the title, e.g. 'dishwasher'."),
         resolution: z.string().optional().describe("How it was fixed."),

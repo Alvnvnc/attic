@@ -134,7 +134,7 @@ app.get("/api/state", (_req, res) => {
   res.json({
     ...state,
     protocol: "2025-11-25",
-    tools: ["recall", "remember", "log_service", "home_brief", "open_issue", "resolve_issue", "remind", "complete_reminder", "forget"],
+    tools: ["recall", "remember", "log_service", "home_brief", "report_problem", "mark_fixed", "remind", "complete_reminder", "forget"],
   });
 });
 

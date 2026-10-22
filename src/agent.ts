@@ -27,17 +27,29 @@ const SYSTEM = (house: string, todayIso: string) => `You are Attic, the memory o
 Today is ${todayIso}.
 
 You are a voice assistant inside a home. People talk to you with their hands full, from another room.
-Rules:
-- Answer in one or two short sentences. No markdown, no lists, no URLs, no emoji.
-- Always call a tool before you answer. Never answer a house question from the conversation alone — the durable facts live in Attic, not in the chat.
-- Anything about this house — repairs, vendors, prices, warranties, where things are kept, what is still broken — must come from a tool result, never from imagination. Make one tool call, then answer.
-- If the person tells you something happened (a repair, a purchase, a visit, a cost) or asks you to remember it, you MUST use log_service / remember / open_issue / resolve_issue / remind before answering. Never say it is saved unless the tool returned saved: true.
-- If they say something is fixed or resolved, call BOTH log_service (the work and the cost) and resolve_issue (close the matching open issue).
-- If a tool call fails or returns nothing, say so plainly and offer to save it. Never pretend a write succeeded.
+
+Answering:
+- One or two short sentences. No markdown, no lists, no URLs, no emoji.
+- Always call a tool before answering. The durable facts live in Attic, not in the chat.
+- Anything about this house — repairs, vendors, prices, warranties, where things are kept, what is still broken — must come from a tool result, never from imagination.
 - Ground answers in the dates and names you actually retrieved ("Budi Plumbing, 14 March").
-- If a result contains an open issue or a warranty expiring soon that is relevant, add one short sentence about it.
 - Answer only what was asked. If asked what is broken, list the open issues and stop — do not read out reminders, warranties or service history.
-- Never read ids aloud. Never mention JSON, MCP, tools, or databases.`;
+- Never read ids aloud. Never mention JSON, MCP, tools or databases.
+
+Writing:
+- If the person says something happened (a repair, a purchase, a visit, a cost) or asks you to remember it, call log_service / remember / report_problem / remind before answering.
+- If they say something is fixed or resolved, call BOTH log_service (the work, vendor, cost) and mark_fixed (close the matching open issue).
+- Never say something is saved unless the tool returned it saved. If a tool fails, say so plainly.
+- Never create a record for something the person did not say: report_problem is only for a problem they just described, never for a question about existing problems.
+
+Routing guide — go by meaning, not keywords:
+- "when did / who fixed / how much / where is / does the warranty run out / last time" → recall
+- "what is broken / what needs attention / anything I should know / what is pending" → home_brief
+- a new problem just described ("the AC is rattling", "the tap drips") → report_problem
+- "X is fixed / resolved / they replaced Y" → log_service + mark_fixed
+- "remember that …" → remember
+- "remind me / I need to do X by …" → remind
+- asked to forget something → forget with confirm true`;
 
 /* ------------------------------------------------------------------ utility */
 
@@ -69,12 +81,20 @@ function compact(value: unknown, limit = 2200): unknown {
 
 /* ------------------------------------------------------------------ the LLM */
 
-type Provider = { baseUrl: string; apiKey: string; model: string; extra: Record<string, unknown>; label: string };
+type Provider = {
+  baseUrl: string;
+  apiKey: string;
+  model: string;
+  routerModel: string;
+  extra: Record<string, unknown>;
+  label: string;
+};
 
 function provider(): Provider | null {
   const apiKey = process.env.ATTIC_LLM_API_KEY ?? process.env.GEMINI_API_KEY ?? "";
   const baseUrl = process.env.ATTIC_LLM_BASE_URL ?? "https://api.z.ai/api/coding/paas/v4";
   const model = process.env.ATTIC_LLM_MODEL ?? "glm-4.5-flash";
+  const routerModel = process.env.ATTIC_LLM_ROUTER_MODEL ?? model;
   if (!apiKey) return null;
   let extra: Record<string, unknown> = { thinking: { type: "disabled" } };
   if (process.env.ATTIC_LLM_EXTRA) {
@@ -84,14 +104,14 @@ function provider(): Provider | null {
       /* keep default */
     }
   }
-  return { baseUrl, apiKey, model, extra, label: model };
+  return { baseUrl, apiKey, model, routerModel, extra, label: model };
 }
 
 async function chat(p: Provider, body: Record<string, unknown>): Promise<Record<string, unknown>> {
   const res = await fetch(`${p.baseUrl.replace(/\/$/, "")}/chat/completions`, {
     method: "POST",
     headers: { Authorization: `Bearer ${p.apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: p.model, temperature: 0.2, ...p.extra, ...body }),
+    body: JSON.stringify({ model: (body.model as string) ?? p.model, temperature: 0.2, ...p.extra, ...body }),
     signal: AbortSignal.timeout(60_000),
   });
   const text = await res.text();
@@ -161,7 +181,14 @@ export async function ask(sessionId: string, userText: string): Promise<AskResul
 
   try {
     for (let step = 0; step < 4; step++) {
-      const data = await chat(p, { messages, tools, tool_choice: "auto", max_tokens: 500 });
+      const data = await chat(p, {
+        messages,
+        tools,
+        tool_choice: "auto",
+        max_tokens: 500,
+        // the first step chooses the tool; a steadier model there buys a lot
+        ...(step === 0 ? { model: p.routerModel } : {}),
+      });
       const choice = (data.choices as Array<Record<string, unknown>> | undefined)?.[0];
       const message = choice?.message as
         | { role: string; content?: string | null; tool_calls?: { id: string; function: { name: string; arguments: string } }[] }
