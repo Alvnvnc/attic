@@ -41,9 +41,8 @@
         overflow: hidden;
       }
       .scene {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
+        position: absolute;
+        inset: 0;
         padding: 64px 84px;
         display: none;
       }
@@ -60,7 +59,7 @@
       .rule { height: 1px; background: rgba(255, 255, 255, 0.08); }
 
       /* ---------------------------------------------------------------- s1 */
-      #s1 { display: grid; place-items: center; text-align: center; }
+      #s1.is-on { display: grid; place-items: center; text-align: center; }
       #s1 .glow {
         position: absolute;
         width: 620px;
@@ -75,7 +74,7 @@
         50% { transform: scale(1.06); opacity: 1; }
       }
       #s1 .inner { position: relative; }
-      #s1 .roof { width: 54px; height: 26px; margin: 0 auto 26px; color: #5ad1e8; }
+      #s1 .roof { width: 46px; height: 22px; margin: 0 auto 10px; color: #5ad1e8; }
       #s1 h1 {
         font-family: "Instrument Serif", serif;
         font-size: 176px;
@@ -168,32 +167,49 @@
         animation: rise 900ms ease 2100ms both;
       }
       #s2 .bottom .lead em { color: #5ad1e8; font-style: italic; }
+      #s2 .bottom::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -30px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+      }
 
       /* ---------------------------------------------------------------- s4 */
+      #s4 { display: none; }
+      #s4.is-on { display: flex; flex-direction: column; }
       #s4 h2 {
         font-family: "Instrument Serif", serif;
         font-weight: 400;
-        font-size: 54px;
-        margin: 6px 0 30px;
+        font-size: 56px;
+        margin: 6px 0 40px;
         letter-spacing: -0.02em;
       }
-      #s4 .diagram { display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr; align-items: center; gap: 0; }
+      #s4 .diagram {
+        display: grid;
+        grid-template-columns: 1fr 122px 1fr 122px 1fr;
+        align-items: stretch;
+      }
       #s4 .box {
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 16px;
-        padding: 22px 24px;
+        padding: 24px 26px;
         background: rgba(255, 255, 255, 0.02);
-        min-height: 148px;
+        display: flex;
+        flex-direction: column;
       }
       #s4 .box .k { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #767f8c; }
-      #s4 .box .v { margin-top: 8px; font-size: 20px; letter-spacing: -0.01em; }
-      #s4 .box .m { margin-top: 8px; color: #767f8c; font-size: 12px; line-height: 1.5; }
-      #s4 .box.accent { border-color: rgba(90, 209, 232, 0.35); box-shadow: 0 0 0 4px rgba(90, 209, 232, 0.06); }
-      #s4 .link { position: relative; height: 1px; background: rgba(255, 255, 255, 0.18); }
-      #s4 .link::after {
+      #s4 .box .v { margin-top: 10px; font-size: 22px; letter-spacing: -0.015em; }
+      #s4 .box .m { margin-top: auto; padding-top: 18px; color: #8a93a0; font-size: 12.5px; line-height: 1.55; }
+      #s4 .box.accent { border-color: rgba(90, 209, 232, 0.38); box-shadow: 0 0 0 4px rgba(90, 209, 232, 0.06); }
+      #s4 .link { position: relative; display: flex; align-items: center; }
+      #s4 .link .line { position: relative; width: 100%; height: 1px; background: rgba(255, 255, 255, 0.16); }
+      #s4 .link .line::after {
         content: "";
         position: absolute;
-        right: -1px;
+        right: 0;
         top: -3px;
         width: 7px;
         height: 7px;
@@ -203,36 +219,72 @@
       }
       #s4 .link span {
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        top: -26px;
-        white-space: nowrap;
+        left: 0;
+        right: 0;
+        top: 50%;
+        margin-top: 16px;
+        text-align: center;
         color: #767f8c;
         font-family: "JetBrains Mono", monospace;
-        font-size: 10px;
+        font-size: 9px;
+        letter-spacing: 0.02em;
+        line-height: 1.5;
       }
-      #s4 .tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+      #s4 .tools-label {
+        margin: 44px 0 12px;
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #767f8c;
+      }
+      #s4 .tools { display: flex; flex-wrap: wrap; gap: 8px; }
       #s4 .tools span {
         font-family: "JetBrains Mono", monospace;
-        font-size: 11px;
+        font-size: 11.5px;
         color: #cfeeff;
         border: 1px solid rgba(90, 209, 232, 0.28);
         background: rgba(90, 209, 232, 0.07);
         border-radius: 999px;
-        padding: 6px 12px;
+        padding: 7px 13px;
       }
+      #s4 .snippet {
+        margin-top: 34px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        background: #080a0d;
+        padding: 18px 20px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        line-height: 1.8;
+        color: #8fa1b5;
+        max-width: 900px;
+      }
+      #s4 .snippet b { color: #5ad1e8; font-weight: 400; }
+      #s4 .snippet i { color: #6b7480; font-style: normal; }
+      #s4 .notes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-top: auto;
+        padding-top: 28px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      #s4 .notes h4 {
+        margin: 0 0 6px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      #s4 .notes p { margin: 0; color: #767f8c; font-size: 12.5px; line-height: 1.55; }
       #s4 .foot {
-        position: absolute;
-        left: 84px;
-        right: 84px;
-        bottom: 58px;
+        margin-top: 26px;
         display: flex;
         justify-content: space-between;
-        color: #767f8c;
+        color: #5e6673;
       }
 
       /* ---------------------------------------------------------------- s5 */
-      #s5 { display: grid; place-items: center; text-align: center; }
+      #s5.is-on { display: grid; place-items: center; text-align: center; }
       #s5 h2 {
         font-family: "Instrument Serif", serif;
         font-size: 112px;
@@ -308,31 +360,59 @@
           <div class="v">Alexa+ / simulated app</div>
           <div class="m">Holds no house state. Lists tools, calls them, speaks the result.</div>
         </div>
-        <div class="link"><span>HTTPS · JSON-RPC · SSE</span></div>
-        <div class="box accent">
+        <div class="link">
+          <div class="line"></div>
+          <span>HTTPS<br />JSON-RPC · SSE</span>
+        </div>
+        <div class="box accent" style="min-height: 170px">
           <div class="k">Attic</div>
           <div class="v">MCP server · Node 22</div>
           <div class="m">Streamable HTTP transport, sessions, bearer auth, nine tools.</div>
         </div>
-        <div class="link"><span>SQL · FTS5</span></div>
+        <div class="link">
+          <div class="line"></div>
+          <span>SQL · FTS5<br />one file</span>
+        </div>
         <div class="box">
           <div class="k">Storage</div>
           <div class="v">SQLite</div>
-          <div class="m">Memories, appliances, service ledger, issues, reminders — one file.</div>
+          <div class="m">Memories, appliances, service ledger, issues, reminders.</div>
         </div>
       </div>
+      <p class="tools-label">Tools exposed</p>
       <div class="tools">
         <span>recall</span><span>remember</span><span>log_service</span><span>home_brief</span>
         <span>open_issue</span><span>resolve_issue</span><span>remind</span><span>complete_reminder</span><span>forget</span>
       </div>
+      <div class="snippet"><i>// the same endpoint a real Alexa+ client would call</i><br />
+→ {<b>"method"</b>:<b>"initialize"</b>,"params":{<b>"protocolVersion"</b>:"2025-11-25",…}}<br />
+← {<b>"protocolVersion"</b>:"2025-11-25","serverInfo":{"name":"attic","version":"1.0.0"}}</div>
+      <div class="notes">
+        <div>
+          <h4>Stateless assistant</h4>
+          <p>Every house fact is fetched at answer time. The model never carries the house in its prompt.</p>
+        </div>
+        <div>
+          <h4>Grounded, not guessed</h4>
+          <p>Writes only count when a tool returns them, so "saved" in a reply is a fact, not a hope.</p>
+        </div>
+        <div>
+          <h4>Self-hosted by default</h4>
+          <p>One Node process, one SQLite file, a bearer token — running here on a small VPS behind TLS.</p>
+        </div>
+      </div>
       <div class="foot mono">
         <span>protocol 2025-11-25 · streamable-http</span>
-        <span>self-hosted · MIT · one small VPS</span>
+        <span>MIT · github.com/Alvnvnc/attic</span>
       </div>
     </section>
 
     <section class="scene" id="s5">
       <div>
+        <svg class="roof" viewBox="0 0 32 16" fill="none" stroke="currentColor" stroke-width="1.4"
+             style="width: 40px; height: 20px; margin-bottom: 14px; color: #5ad1e8">
+          <path d="M2 14 16 2l14 12" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
         <h2>Attic</h2>
         <p class="tag">The memory of your house.</p>
         <div class="links">

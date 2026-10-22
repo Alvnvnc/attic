@@ -80,7 +80,7 @@ app.use("/mcp", (req, res, next) => {
   next();
 });
 
-app.post("/mcp", mcpTrace(), async (req, res) => {
+app.post("/mcp", mcpTrace({ sessionHeader: "x-attic-trace" }), async (req, res) => {
   const sessionId = req.headers["mcp-session-id"] as string | undefined;
   try {
     let transport = sessionId ? transports[sessionId] : undefined;
@@ -124,7 +124,7 @@ async function handleSession(req: express.Request, res: express.Response) {
   await transport.handleRequest(req, res);
 }
 
-app.get("/mcp", mcpTrace(), handleSession);
+app.get("/mcp", mcpTrace({ sessionHeader: "x-attic-trace" }), handleSession);
 app.delete("/mcp", handleSession);
 
 /* ---------------------------------------------------------------- the app */
