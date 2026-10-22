@@ -169,13 +169,10 @@ export async function ask(sessionId: string, userText: string): Promise<AskResul
 
       const calls = message.tool_calls ?? [];
       if (calls.length === 0) {
-        // Guard against a model that chats instead of acting: if the utterance
-        // describes something that happened, force one grounded attempt.
-        const actionish =
-          /remember|note that|fixed|replaced|repaired|installed|bought|paid|coming|appointment|due|remind|serviced|leak|broken|warranty/i.test(
-            userText,
-          );
-        if (step === 0 && actionish) {
+        // Attic's promise is that every answer is grounded in a tool result. If
+        // the model tries to answer from the prompt alone, make it try once more
+        // with an explicit instruction before we accept the answer.
+        if (step === 0) {
           messages.push({ role: "assistant", content: message.content ?? "" });
           messages.push({
             role: "user",
