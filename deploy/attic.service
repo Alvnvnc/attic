@@ -1,0 +1,25 @@
+[Unit]
+Description=Attic — household memory MCP server
+Documentation=https://github.com/Alvnvnc/attic
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/attic/app
+EnvironmentFile=/opt/attic/app/.env
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/opt/attic/app/data
+
+[Install]
+WantedBy=multi-user.target

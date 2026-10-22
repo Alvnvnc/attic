@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Attic — the memory of your house</title>
+    <meta name="description" content="Attic is a self-hosted MCP server that gives Alexa+ a long-term memory for a home: repairs, vendors, warranties, where things are kept." />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230e1014'/%3E%3Cpath d='M8 19.5 16 10l8 9.5' stroke='%235ad1e8' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M11 19v5h10v-5' stroke='%23f2f4f7' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div class="app">
+      <nav class="rail" aria-label="Sections">
+        <a class="mark" href="#live" title="Attic">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M7 20 16 9.5 25 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M11 19.5V26h10v-6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".55" />
+          </svg>
+        </a>
+        <div class="rail-nav">
+          <button class="rail-btn is-active" data-view="live" title="Ask the house">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10m0 0a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3Zm-6-3v1a6 6 0 0 0 12 0V7M12 17v3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <span>Live</span>
+          </button>
+          <button class="rail-btn" data-view="ledger" title="House ledger">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h11.5A2.5 2.5 0 0 1 19 8v11.5H7.5A2.5 2.5 0 0 1 5 17V5.5Zm3 4H16m-8 4h8m-8 4h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <span>Ledger</span>
+          </button>
+          <button class="rail-btn" data-view="protocol" title="MCP surface">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7 4 12l5 5m6-10 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            <span>MCP</span>
+          </button>
+        </div>
+        <div class="rail-foot">
+          <span class="status-dot" title="MCP server online"></span>
+        </div>
+      </nav>
+
+      <main class="stage">
+        <header class="topbar">
+          <div class="house">
+            <span class="eyebrow">Alexa+ · Attic skill</span>
+            <h1>Casa Wibowo</h1>
+          </div>
+          <div class="top-right">
+            <span class="chip"><i class="dot"></i>house memory attached</span>
+            <span class="chip mono" id="protocol-chip">MCP 2025-11-25</span>
+          </div>
+        </header>
+
+        <!-- ------------------------------------------------------- live view -->
+        <section class="view view-live" id="view-live">
+          <div class="presence" id="presence" data-state="idle">
+            <div class="orb">
+              <span class="orb-core"></span>
+              <span class="orb-ring r1"></span>
+              <span class="orb-ring r2"></span>
+            </div>
+            <div class="presence-copy">
+              <p class="presence-label" id="presence-label">Ready when you are</p>
+              <p class="presence-sub" id="presence-sub">Every answer is a real MCP tool call over Streamable HTTP.</p>
+            </div>
+          </div>
+
+          <div class="transcript" id="transcript">
+            <div class="empty" id="empty">
+              <p class="empty-lead">A house forgets. Attic doesn't.</p>
+              <p class="empty-body">Ask about repairs, vendors, warranties, or where the spare key went. Try one:</p>
+              <div class="suggestions" id="suggestions">
+                <button>When did we last service the water heater?</button>
+                <button>When does the fridge warranty expire?</button>
+                <button>What is still broken in the house?</button>
+                <button>Where is the spare key?</button>
+              </div>
+            </div>
+          </div>
+
+          <form class="composer" id="composer" autocomplete="off">
+            <button type="button" class="mic" id="mic" title="Hold a conversation">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10m0 0a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3Zm-6-3v1a6 6 0 0 0 12 0V7M12 17v3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            </button>
+            <input id="prompt" name="prompt" placeholder="Ask the house anything…" aria-label="Ask the house" />
+            <button class="send" type="submit">Ask</button>
+          </form>
+        </section>
+
+        <!-- ----------------------------------------------------- ledger view -->
+        <section class="view view-ledger" id="view-ledger" hidden>
+          <div class="ledger-grid">
+            <div class="col">
+              <h2>Appliances &amp; warranty</h2>
+              <div id="appliances" class="appliance-list"></div>
+              <h2 class="mt">Service ledger</h2>
+              <div id="services" class="service-list"></div>
+              <h2 class="mt">Open issues</h2>
+              <div id="issues" class="issue-list"></div>
+            </div>
+            <div class="col">
+              <h2>What Attic remembers</h2>
+              <div id="memories" class="memory-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------- protocol view -->
+        <section class="view view-protocol" id="view-protocol" hidden>
+          <div class="proto">
+            <div class="proto-head">
+              <span class="eyebrow">Self-hosted MCP server</span>
+              <h2>Speak MCP 2025-11-25, over Streamable HTTP</h2>
+              <p class="proto-sub">
+                Attic is a standalone MCP server. The Alexa+ side only has to know the endpoint and a bearer token;
+                every fact it speaks comes back through <code>tools/call</code>.
+              </p>
+            </div>
+            <div class="proto-facts">
+              <div><span>Endpoint</span><strong class="mono">POST /mcp</strong></div>
+              <div><span>Protocol</span><strong class="mono">2025-11-25</strong></div>
+              <div><span>Transport</span><strong class="mono">streamable-http</strong></div>
+              <div><span>Sessions</span><strong class="mono">Mcp-Session-Id</strong></div>
+            </div>
+            <h3>Tools exposed</h3>
+            <div id="tools" class="tool-list"></div>
+            <h3>Initialize, from a cold client</h3>
+            <pre class="code" id="code-sample">curl -s https://attic.example/mcp \
+  -H 'Authorization: Bearer $ATTIC_MCP_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{
+        "protocolVersion":"2025-11-25","capabilities":{},
+        "clientInfo":{"name":"curl","version":"1"}}}'</pre>
+          </div>
+        </section>
+      </main>
+
+      <aside class="inspector" aria-label="MCP traffic">
+        <div class="inspector-head">
+          <div>
+            <p class="eyebrow">Wire</p>
+            <h2>MCP traffic</h2>
+          </div>
+          <span class="pill" id="wire-pill">connecting</span>
+        </div>
+        <p class="inspector-meta" id="inspector-meta">attic · streamable-http · 2025-11-25</p>
+        <div class="frames" id="frames" aria-live="polite"></div>
+        <div class="inspector-foot">
+          <span class="mono">POST /mcp</span>
+          <span class="muted" id="frame-count">0 frames</span>
+        </div>
+      </aside>
+    </div>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

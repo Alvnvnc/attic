@@ -1,0 +1,28 @@
+{
+	# Runs on the host network: it binds 443 for TLS and talks to the app on
+	# 127.0.0.1:8787. Port 80 belongs to another site on this box, so ACME uses
+	# TLS-ALPN-01 only.
+	admin off
+	storage file_system /data
+	email admin@alvnvnc.site
+}
+
+attic.54-254-226-82.sslip.io {
+	encode zstd gzip
+
+	tls {
+		issuer acme {
+			disable_http_challenge
+		}
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+
+	reverse_proxy 127.0.0.1:8787 {
+		flush_interval -1
+	}
+}

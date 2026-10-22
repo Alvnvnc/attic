@@ -1,0 +1,19 @@
+# TLS terminator for the Attic demo, on the same host as the app.
+#   docker compose -f deploy/compose.yml up -d
+# Uses host networking because port 80 on this box is already taken by another
+# site; Caddy therefore issues the certificate with TLS-ALPN-01 on port 443.
+name: attic-proxy
+
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  caddy-data:
+  caddy-config:
