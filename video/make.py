@@ -127,7 +127,7 @@ def main() -> None:
         (ledger_start, "This is the ledger those answers come from. One SQLite file, nine tools, one endpoint."),
     ]
 
-    s4_lines = [(0.7, "Under the hood, it is one Node process, one SQLite file, and nine tools. Recall and remember. Log service. Home brief. Open and resolve an issue. Remind and complete. And forget, because memory is only useful if it can be taken back. Sessions, streaming and JSON RPC are the SDK's job. The model only ever sees tool results, so it cannot invent a price or a date. This is running on a five dollar VPS, behind TLS, with a bearer token.")]
+    s4_lines = [(0.7, "Under the hood, it is one Node process, one SQLite file, and nine tools. Recall and remember. Log service. Home brief. Report a problem, and mark it fixed. Remind and complete. And forget, because memory is only useful if it can be taken back. Sessions, streaming and JSON RPC are the SDK's job. The model only ever sees tool results, so it cannot invent a price or a date. This is running on a five dollar VPS, behind TLS, with a bearer token.")]
 
     s5_lines = [(0.6, "Attic. The memory of your house. Code, architecture and a friction log are on GitHub, and the live demo is open to try.")]
 

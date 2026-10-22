@@ -38,7 +38,7 @@ stateless and the home owns its own data.
 | `remember` | Save a fact ("spare key is with Mrs. Chen"), deduplicated. |
 | `log_service` | Record a repair or installation: vendor, cost, date, warranty terms. |
 | `home_brief` | Proactive: reminders due, warranties expiring, appliances overdue for service, open issues. |
-| `open_issue` / `resolve_issue` | Track a problem until it is actually fixed, with a resolution. |
+| `report_problem` / `mark_fixed` | Track a problem until it is actually fixed, with a resolution. |
 | `remind` / `complete_reminder` | Maintenance reminders that outlive the conversation. |
 | `forget` | Delete a memory by id or text — memory is only useful if it can be taken back. |
 
