@@ -8,9 +8,10 @@ Built for the **Amazon Developer Hackathon 2026 — Alexa+ track** with a real M
 demo it (voice-first UI + live MCP wire inspector).
 
 - Live experience: <https://attic.54-254-226-82.sslip.io>
+- Demo video (2:43): <https://www.youtube.com/watch?v=0eQjCyVg3dI>
 - MCP endpoint: `POST https://attic.54-254-226-82.sslip.io/mcp` (bearer token, see *Testing*)
-- Demo video: see the submission on Devpost
 - Companion open-source contribution (Open Source mini challenge): <https://github.com/Alvnvnc/mcp-trace>
+- Submission packet (all Devpost field text, testing instructions): [`docs/devpost-submission.md`](docs/devpost-submission.md)
 
 ---
 
@@ -115,9 +116,26 @@ The demo deployment runs the server behind a TLS-terminating Caddy on the same h
 
 ## Testing
 
-The public demo is open to judges; the MCP endpoint needs the bearer token, which is provided in the
-Devpost testing instructions. Everything needed to run it locally is in this repository
-(`npm install && npm run build && npm start`, seed script included).
+The public demo is open to judges; the MCP endpoint needs the bearer token, which is in the Devpost
+testing instructions (also reproduced in [`docs/devpost-submission.md`](docs/devpost-submission.md)).
+
+Talk to the deployed server:
+
+```bash
+curl -s https://attic.54-254-226-82.sslip.io/mcp \
+  -H "Authorization: Bearer $ATTIC_MCP_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{
+        "protocolVersion":"2025-11-25","capabilities":{},
+        "clientInfo":{"name":"curl","version":"1"}}}'
+```
+
+Keep the returned `Mcp-Session-Id` and send it on the following `tools/list` / `tools/call` requests.
+`.well-known/mcp/server-card.json` and `/api/manifest` describe the server for discovery.
+
+To run everything locally, `npm install && npm run build && npm start` plus the seed script is enough;
+the database is synthetic demo data.
 
 ## Track requirements, mapped
 
