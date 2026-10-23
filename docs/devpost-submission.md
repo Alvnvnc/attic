@@ -334,8 +334,11 @@ Local run: npm install && npm run build && cp .env.example .env (add any OpenAI-
 - [x] Runtime use of the track technology in code (`StreamableHTTPServerTransport`, `McpServer`)
 - [x] Product feedback covering every tool/API/SDK
 - [x] Open Source mini challenge fields (contribution URL, repo URL, username, description)
-- [ ] Join the hackathon and submit the project on Devpost (needs a logged-in, verified account)
-- [ ] Optional: attach the friction log to the two optional feedback questions
+- [x] Join the hackathon and submit the project on Devpost — **submitted 5/5**, entry 1255329
+  (`https://devpost.com/software/attic-ahotyg`, submitted as Devpost user `alvnvnc`)
+- [x] Friction log attached (the Devpost field only accepts a URL, so it points at `docs/friction-log.md`)
+- [ ] Optional: replace the generated project card with a real thumbnail (the upload throws a JS error in the
+  automation browser; cosmetic only, the gallery is not published yet)
 
 ---
 
